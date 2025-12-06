@@ -15,25 +15,26 @@ public class UserService {
 
     @Autowired
     private JwtService jwtService;
-
     @Autowired
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private UserRepo repo;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
+    // If you want to send something to database -> use repo layer
     public Users register(Users user) {
         user.setPassword(encoder.encode(user.getPassword()));
         repo.save(user);
         return user;
     }
 
+// How do we verify if user are login?
     public String verify(Users user) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        Authentication authentication =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(user.getUsername())  ;
+            return jwtService.generateToken(user.getUsername()); // when success -> generate token so we can use it later.
         } else {
             return "fail";
         }

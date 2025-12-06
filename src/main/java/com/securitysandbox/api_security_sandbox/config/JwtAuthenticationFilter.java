@@ -36,6 +36,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         jwt = authorizationHeader.substring(7); // 'Bearer ' have 7 char
-        userEmail = jwtService.extractUsername(jwt); // to extract the user's email from jwt token.
+        userEmail = jwtService.extractUserName(jwt); // to extract the user's email from jwt token.
     }
 }

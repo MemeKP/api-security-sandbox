@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,12 +23,20 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private JwtFilter jwtFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(customizer -> customizer.disable()) // no csrf
-                .authorizeHttpRequests(request -> request.anyRequest().authenticated()) // every req must log in first.
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("register", "login")// /register กับ /login จะไม่ต้อง auth ก่อน
+                        .permitAll()
+                        .anyRequest().authenticated()) // every req must log in first.
                 .httpBasic(Customizer.withDefaults()) // return sessionID
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // เป็นการบอกว่าก่อนที่จะไป authfilter ให้ทำ jwtfilter ก่อน
+                .build();
     }
 
     @Bean
