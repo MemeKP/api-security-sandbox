@@ -28,6 +28,9 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
+    @Autowired
+    private AttackDetectionFilter attackDetectionFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(customizer -> customizer.disable()) // no csrf
@@ -37,7 +40,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()) // every req must log in first.
                 .httpBasic(Customizer.withDefaults()) // return sessionID
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // เป็นการบอกว่าก่อนที่จะไป authfilter ให้ทำ jwtfilter ก่อน
+                .addFilterBefore(attackDetectionFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter, AttackDetectionFilter.class) // เป็นการบอกว่าก่อนที่จะไป attackDetection ให้ทำ jwtfilter ก่อน
                 .build();
     }
 
