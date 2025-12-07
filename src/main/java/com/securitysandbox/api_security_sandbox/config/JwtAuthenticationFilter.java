@@ -1,7 +1,7 @@
 package com.securitysandbox.api_security_sandbox.config;
 
 
-import com.securitysandbox.api_security_sandbox.security.JwtService;
+import com.securitysandbox.api_security_sandbox.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        jwt = authorizationHeader.substring(7); // 'Bearer ' have 7 char
+        jwt = authorizationHeader.substring(7); // 'Bearer ' have 6 char so we have to start with pos.7
         userEmail = jwtService.extractUserName(jwt); // to extract the user's email from jwt token.
     }
 }

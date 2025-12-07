@@ -6,14 +6,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "users")
 public class Users {
 
     //กำหนดให้ id เป็น primary key และให้ database เป็นคน gen id มาให้
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String username;
     private String password;
+    private String email;
 
     // ให้ผู้ใช้มีหลาย role (spring security ใช้ role ใน jwt)
     @ElementCollection(fetch = FetchType.EAGER)
@@ -24,11 +26,19 @@ public class Users {
     // สำหรับ Brute Force Protection
     private int failedAttempts = 0;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setId(Integer id) {
         this.id = id;
     }
 

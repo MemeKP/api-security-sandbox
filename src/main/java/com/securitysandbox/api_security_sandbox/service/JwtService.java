@@ -1,4 +1,4 @@
-package com.securitysandbox.api_security_sandbox.security;
+package com.securitysandbox.api_security_sandbox.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
