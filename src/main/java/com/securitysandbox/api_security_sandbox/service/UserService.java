@@ -62,10 +62,10 @@ public class UserService {
                 // If pass auth -> reset number of failed attempts
                 findUser.setFailedAttempts(0);
                 userRepository.save(findUser);
-
+                auditLogger.logSuccessLogin(findUser.getUsername());
                 return jwtService.generateToken(findUser.getUsername()); // when success -> generate token so we can use it later.
             }
-            auditLogger.logSuccessLogin(findUser.getUsername());
+
         } catch (BadCredentialsException e) {
             // wrong password -> update failedAttempts
             int fails = findUser.getFailedAttempts() + 1;

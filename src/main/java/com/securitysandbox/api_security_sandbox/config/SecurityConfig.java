@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("register", "login")// /register กับ /login จะไม่ต้อง auth ก่อน
                         .permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // /admin ต้องเป็น role admin จริงถึงจะดูได้
                         .anyRequest().authenticated()) // every req must log in first.
                 .httpBasic(Customizer.withDefaults()) // return sessionID
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
